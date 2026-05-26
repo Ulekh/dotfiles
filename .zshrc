@@ -154,11 +154,16 @@ eval "$(starship init zsh)"
 # Generated for envman. Do not edit.
 [ -s "$HOME/.config/envman/load.sh" ] && source "$HOME/.config/envman/load.sh"
 
-# Sync tmux theme with macOS Appearance on every prompt (runs in background)
-function _sync_tmux_theme() {
-    ( [ -f ~/.local/bin/tmux-sync-theme ] && ~/.local/bin/tmux-sync-theme &! )
+# Auto-ls on directory change
+function _auto_ls_on_cd() {
+    # Only run if we are in an interactive shell and not in a quiet mode
+    if [[ -n "$PS1" ]]; then
+        echo ""
+        ll # Uses your existing eza alias
+    fi
 }
-add-zsh-hook precmd _sync_tmux_theme
+
+add-zsh-hook chpwd _auto_ls_on_cd
 
 # --- Smart Tab Override ---
 # Must be at the very end to ensure it overrides fzf's Tab bindings

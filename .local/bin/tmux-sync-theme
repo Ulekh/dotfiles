@@ -1,22 +1,24 @@
 #!/bin/zsh
-# Detect macOS Dark/Light mode
-# defaults read is fast, but we only want to trigger tmux if the theme actually changed
-STYLE=$(defaults read -g AppleInterfaceStyle 2>/dev/null)
+# Accept "light" or "dark" as the first argument (passed by dark-notify)
+# If no argument, detect manually
+MODE=$1
+if [[ -z "$MODE" ]]; then
+    STYLE=$(defaults read -g AppleInterfaceStyle 2>/dev/null)
+    [[ "$STYLE" == "Dark" ]] && MODE="dark" || MODE="light"
+fi
 
-if [[ "$STYLE" == "Dark" ]]; then
+if [[ "$MODE" == "dark" ]]; then
     NEW_THEME="mocha.conf"
 else
     NEW_THEME="latte.conf"
 fi
 
-# Check what is currently linked
-CURRENT_LINK=$(readlink ~/.tmux/themes/current.conf 2>/dev/null)
 TARGET_THEME="$HOME/.tmux/themes/$NEW_THEME"
+CURRENT_LINK=$(readlink "$HOME/.tmux/themes/current.conf" 2>/dev/null)
 
-# Only update and source if the theme has actually changed
 if [[ "$CURRENT_LINK" != "$TARGET_THEME" ]]; then
-    ln -sf "$TARGET_THEME" ~/.tmux/themes/current.conf
-    if [[ -n "$TMUX" ]]; then
-        tmux source-file ~/.tmux/themes/current.conf
+    ln -sf "$TARGET_THEME" "$HOME/.tmux/themes/current.conf"
+    if pgrep -x tmux >/dev/null; then
+        tmux source-file "$HOME/.tmux/themes/current.conf"
     fi
 fi

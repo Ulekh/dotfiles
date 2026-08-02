@@ -73,6 +73,7 @@ ZSH_AUTOSUGGEST_USE_ASYNC=1
 # --- Tool Lazy Loading (NVM, Bun, etc.) ---
 export NVM_DIR="$HOME/.nvm"
 [ -f ~/.zsh/nvm_lazy.zsh ] && source ~/.zsh/nvm_lazy.zsh
+[ -f ~/.zsh/_npm_completion ] && source ~/.zsh/_npm_completion
 
 # --- History ---
 HISTFILE=~/.zsh_history
@@ -165,14 +166,8 @@ function _auto_ls_on_cd() {
 
 add-zsh-hook chpwd _auto_ls_on_cd
 
-# --- Smart Tab Override ---
-# Must be at the very end to ensure it overrides fzf's Tab bindings
-function _smart_tab() {
-  if [[ -n "$POSTDISPLAY" ]]; then
-    zle autosuggest-accept
-  else
-    zle expand-or-complete
-  fi
-}
-zle -N _smart_tab
-bindkey '^I' _smart_tab
+# Disable auto-cd behavior
+unsetopt autocd
+
+# Added by Antigravity CLI installer
+export PATH="/Users/olegbordun/.local/bin:$PATH"

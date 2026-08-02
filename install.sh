@@ -12,6 +12,7 @@ files=(
     ".local/bin/tmux-sync-theme:$HOME/.local/bin/tmux-sync-theme"
     ".config/starship.toml:$HOME/.config/starship.toml"
     ".zsh/nvm_lazy.zsh:$HOME/.zsh/nvm_lazy.zsh"
+    ".zsh/_npm_completion:$HOME/.zsh/_npm_completion"
 )
 
 echo "Setting up symbolic links..."
